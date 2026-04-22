@@ -5,8 +5,6 @@ import Table from "../ui/Table";
 import { HiBuildingStorefront } from "react-icons/hi2";
 import SearchBar from "../TableComponents/SearchBar";
 import EditDeleteIcons from "../TableComponents/EditDeleteIcons";
-import { getBranches } from "@/service/API/branchApi";
-import { useQuery } from "@tanstack/react-query";
 import Pagination from "../TableComponents/Pagination";
 import { SkeletonTable } from "../wrapper/SkeletonTable";
 import { PaginationSkeleton } from "../wrapper/PaginationSkelton";

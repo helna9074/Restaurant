@@ -39,8 +39,9 @@ export const GetBranches = async (req, res) => {
     const page = Number(req.query.page) || 1;
 
     const search = req.query.search || "";
+    const all=req.query.all==="true"
     if(req.user.role==="admin"){
- const data = await GetAllBranches({ page, limit, search });
+ const data = await GetAllBranches({ page, limit, search,all});
     return res.status(200).json({ message: "fetched successfully", data });
     }
    const user=await User.findById(req.user.id)
@@ -198,7 +199,7 @@ export const GetPayments = async (req, res) => {
       return res.status(400).json({message:"branchid is required"})
     }
    console.log('this is the branchId',branchId)
-   if(req.user.role==="admin"){
+  //  if(req.user.role==="admin"){
 const data = await GetAllPayments(branchId,search);
     console.log("this is the data",data)
  
@@ -206,13 +207,13 @@ const data = await GetAllPayments(branchId,search);
       message:"fetched successfully",
       data,
     });
-   }
-   const user=await User.findById(req.user.id)
-   const Payments=await Payment.find({branchId:{$in:user.branches}})
-   console.long("this is the res",Payments)
-   return res.status(200).json({
-       Payments
-   })
+  //  }
+  //  const user=await User.findById(req.user.id)
+  //  const Payments=await Payment.find({branchId:{$in:user.branches}})
+  //  console.long("this is the res",Payments)
+  //  return res.status(200).json({
+  //      Payments
+  //  })
     
   } catch (error) {
     console.log("FULL ERROR 👉", error); // 👈 VERY IMPORTANT

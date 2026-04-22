@@ -33,4 +33,4 @@ export const LogintheUser=async({email,password})=>{
 export const GetMeUser=async(id)=>{
    const response=await User.findById(id).select("username role").lean()
    return response
-}
+}

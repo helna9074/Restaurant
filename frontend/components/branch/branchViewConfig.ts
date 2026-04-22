@@ -1,4 +1,4 @@
-export const sections = [
+export const Branchsections = [
   {
     title: "Restaurant Details",
     fields: [
@@ -66,3 +66,28 @@ export const sections = [
     ],
   },
 ];
+export const EmployeeSections= [
+  {
+    title: "Personal Details",
+    fields: [
+      {key:"branch.name",text:"Branch Name"},
+      { key: "firstName", text: "First Name" },
+      { key: "lastName", text: "Last Name" },
+      { key: "email", text: "Email" },
+      { key: "phone", text: "Phone" },
+      { key: "gender", text: "Gender" },
+      { key: "nationality", text: "Nationality" },
+    ],
+  },
+  {
+    title: "Work Information",
+    fields: [
+      { key: "department.department", text: "Department" },
+      { key: "position.position", text: "Position" },
+      
+      { key: "salary", text: "Salary" },
+      { key: "joiningDate", text: "Joining Date" },
+    ],
+  },
+];
+

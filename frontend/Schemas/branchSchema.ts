@@ -21,3 +21,15 @@ export const branchSchema=z.object({
     phone:z.string().min(10,"phone is required"),
 })
 export type BranchFormDAta=z.infer<typeof branchSchema>
+
+export const CustomerSchema=z.object({
+    selectedBranches:z.array(z.string()).min(1,"Select at least one branch"),
+    customer:z.array(z.string()).min(1,"Select at least one customer type")
+})
+export type CustomerFormData=z.infer<typeof CustomerSchema>
+
+export const PaymentSchema=z.object({
+    selectedBranches:z.array(z.string()).min(1,"Select at least one branch"),
+    payment:z.array(z.string()).min(1,"Select at least one customer type")
+})
+export type PaymentFormData=z.infer<typeof PaymentSchema>

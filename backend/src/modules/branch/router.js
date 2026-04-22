@@ -5,8 +5,7 @@ import { Authorization } from '../../../middleware/Authorisation.js'
 import { isAdmin } from '../../../middleware/ProtectedRouter.js'
 
 const router=express.Router()
-router.put('/payment',UpdatePayment)
-router.delete('/payment',DeletePayment)
+
 router.use(Authorization)
 router.get('/branches',GetBranches)
 router.get('/customers',GetCustomers)
@@ -22,5 +21,7 @@ router.delete('/customer',isAdmin,DeleteCustomer)
 
 router.post('/payment',isAdmin,AddPayment)
 router.get('/payments',isAdmin,GetPayments)
+router.put('/payment',isAdmin,UpdatePayment)
+router.delete('/payment',isAdmin,DeletePayment)
 
 export default router

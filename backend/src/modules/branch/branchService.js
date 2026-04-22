@@ -63,7 +63,8 @@ export const createBranchService=async(data,file)=>{
     )
     return branch
 }
-export const GetAllBranches=async({page=1,limit=10,search=''})=>{
+export const GetAllBranches=async({page=1,limit=10,search='',all})=>{
+    console.log("all is ",all)
 
    
      const skip=(page-1)*limit
@@ -76,11 +77,16 @@ export const GetAllBranches=async({page=1,limit=10,search=''})=>{
             {email:{$regex:search,$options:"i"}}
         ]
      }:{}
+
+     if(all){
+          const branches = await Branch.find(filter).sort({createdAt:-1}).lean();
+      return ({ branches });
+     }
     
         const totalBranches=await Branch.countDocuments(filter)
      
     const branches=await Branch.find(filter).select("name logo phone state city email createdAt updatedAt").sort({createdAt:-1}).limit(limit).skip(skip).lean()
-    if(!branches.length) return {branches:[],page,totalPages:0}
+
     return {
 branches:branches,
 page,
@@ -152,7 +158,7 @@ export const GetAllCustomers=async({branchId,search=""})=>{
     console.log("this is the branch id and search",branchId,search)
   let filter={}
   if(search){
-    filter.types={$regex:search,$options:"i"}
+    filter.types={$elemMatch:{$regex:search,$options:"i"}}
   }
   if(branchId){
     filter.branch=branchId
@@ -160,7 +166,7 @@ export const GetAllCustomers=async({branchId,search=""})=>{
   console.log("this is the branchId",branchId)
     const Customers=await CustomerType.find(filter).populate("branch","name").sort({createdAt:-1}).lean()
    
-console.log("this is the customers",Customers)
+
    return Customers
    
 }
@@ -197,7 +203,7 @@ export const AddPaymentMethod=async(branch,paymethods)=>{
 export const GetAllPayments=async(branchId,search="")=>{
     let filter={}
     if(search){
-        filter.paymethods={$regex:search,$options:"i"}
+        filter.paymethods={$elemMatch:{$regex:search,$options:"i"}}
     }
     if(branchId){
         filter.branchId=branchId

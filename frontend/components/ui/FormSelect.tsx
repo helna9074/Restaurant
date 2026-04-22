@@ -75,11 +75,11 @@ const FormSelect = ({
         key={Array.isArray(value) ? value.join(",") : value}
         value={isMulti ? undefined : (value as string)}
         onValueChange={handleSelect}
-        disabled={disabled}
+       
         onOpenChange={setOpen}
         open={open}
       >
-        <SelectTrigger
+        <SelectTrigger disabled={disabled}
           className={`${className ? className : "w-full p-3! h-fit! bg-input-box! rounded-xl  text-text-secondary"}  `}
         >
          

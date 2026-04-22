@@ -2,7 +2,7 @@
 
 import BranchTabs from "@/components/branch/BranchTabs";
 
-import BranchTableClient from "@/components/branch/BranchTableClient";
+
 import { useState } from "react";
 
 import ConfirmAlert from "@/components/ui/DeleteDialogue";
@@ -13,9 +13,14 @@ import CustomerSection from "@/components/branch/CustomerSection";
 
 const BranchPage = () => {
       const [activeTab, setActiveTab] = useState("branch");
+       const tabs = [
+    { id: "branch", label: "Branch" },
+    { id: "CustomerType", label: "Customer Type" },
+    { id: "payment", label: "Payment" },
+  ];
   return (
-    <div className="mt-10 relative">
-      <BranchTabs  activeTab={activeTab} setActiveTab={setActiveTab}/>
+    <div className="mt-10 relative ">
+      <BranchTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab}/>
       {activeTab === "branch" && <BranchSection />}
       {activeTab === "CustomerType" && <CustomerSection/>}
       {activeTab === "payment" && <PaymentSection />}

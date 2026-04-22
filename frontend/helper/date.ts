@@ -1,4 +1,5 @@
 import { CustomerRow, CustomerType, PaymentMethod, Paymentrow } from "@/types/branch"
+
 import { MenuItems } from "@headlessui/react"
 
 export const FormatDate=(date:Date|string)=>{
@@ -21,6 +22,7 @@ export const Rows=(data:CustomerType[]):CustomerRow[]=>{
    
 }
 export const PaymentRows=(data:PaymentMethod[]):Paymentrow[]=>{
+    console.log("thi si the data",data)
     return data.flatMap(item=>
         item.paymethods.map(paymethod=>({
             branchId:item.branchId,
@@ -29,3 +31,6 @@ export const PaymentRows=(data:PaymentMethod[]):Paymentrow[]=>{
         }))
     )
 }
+export const getValue = (obj: any, path: string) => {
+  return path.split(".").reduce((acc, key) => acc?.[key], obj);
+};

@@ -10,12 +10,12 @@ const DashboardLayout = ({children}:any) => {
 
   return (
     <SidebarProvider>
-    <div className='flex min-h-screen'>
+    <div className='flex min-h-screen flex-col lg:flex-row'>
      
         <SideBar/>
      <SidebarOverlay/>
    
-      <div className='flex-1 lg:ml-52'>
+      <div className='flex-1 w-full lg:ml-52'>
         <header>
             <Navbar/>
         </header>

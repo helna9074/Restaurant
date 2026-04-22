@@ -12,7 +12,7 @@ const Navbar = () => {
   const pageName=pathname.split('/').pop()
   const {toggleSidebar}=useSidebar()
   return (
-    <div className='fixed top-0 lg:left-52 right-0 left-0 flex gap-8 lg:gap-2  py-5 px-2 bg-background z-50 items-center '>
+    <div className='fixed top-0 lg:left-52 right-0 left-0 flex gap-8 lg:gap-2  py-5 px-2 bg-background z-50 items-center whitespace-nowrap '>
       <div className='flex items-center text-text-primary'>
         <button className="lg:hidden" onClick={toggleSidebar}>
           <IoMdMenu size={20}/>
@@ -27,7 +27,7 @@ const Navbar = () => {
       <div className='flex items-center gap-6 text-text-primary'>
         <div className='flex gap-2 items-center'>
             <FaUser className='text-sm'/>
-            <div className='flex flex-col space-y-1 text-xs'>
+            <div className='flex flex-col space-y-1 text-xs lg:visible hidden'>
              <p>Hashim</p>
              <p>Compnay Admin</p>
             </div>

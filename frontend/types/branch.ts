@@ -21,6 +21,8 @@ export type Pagination={
     page:number,
     limit?:number,
     search?:string,
+    all?:boolean
+
 }
 export type CustomerType={
   _id:string,

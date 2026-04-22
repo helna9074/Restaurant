@@ -8,6 +8,7 @@ interface Props{
     register?:UseFormRegisterReturn
     error?:string
     onChange?:(e:React.ChangeEvent<HTMLInputElement>)=>void
+    onKeyDown?:(e:React.KeyboardEvent<HTMLInputElement>)=>void
 }
 const Input = ({className,type,placeholder,label,register,error,onChange}:Props) => {
   return (

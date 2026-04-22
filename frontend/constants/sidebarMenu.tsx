@@ -7,7 +7,7 @@ import table from "../Assets/dining-table (1) 1.png";
 import chef from "../Assets/chef (1) 1.png";
 import rocket from "../Assets/sharp.png";
 import { FaUser } from "react-icons/fa";
-
+import { BsPersonAdd } from "react-icons/bs";
 import { BsBuildingFillAdd } from "react-icons/bs";
 
 export const sidebarMenu = [
@@ -28,6 +28,10 @@ export const sidebarMenu = [
     title: "Branch",
     icon: BsBuildingFillAdd,
     href: "/branch",
+  },{
+    title:"Employees",
+    icon:BsPersonAdd,
+    href:"/Employees"
   },
   {
     title: "User",

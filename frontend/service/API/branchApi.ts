@@ -9,7 +9,7 @@ export const createBranch = async (data: FormData) => {
   });
   return res.data;
 };
-export const getBranches = async ({ page, limit = 10, search }: Pagination) => {
+export const getBranches = async ({ page, limit = 10, search ,all}: Pagination) => {
   try {
     console.log("api is calling");
     const res = await API.get("/branch/branches", {
@@ -17,6 +17,7 @@ export const getBranches = async ({ page, limit = 10, search }: Pagination) => {
         page,
         limit,
         search,
+        all
       },
     });
     console.log("this is branches", res.data);
@@ -67,7 +68,7 @@ export const GetCustomers=async(search:string,branchId:string)=>{
   })
   console.log("...calling")
   console.log("this is the response we getted",res.data)
-  return res.data
+  return res.data.data??[]
 
   }catch(error){
 console.log(error,"this was the error")
@@ -96,8 +97,11 @@ export const GetPaymentMethods=async(branchId:string,search="")=>{
   try{
     console.log("getpayment is loading")
     const res=await API.get("branch/payments",{params:{branchId,search}})
-    return res.data
+    console.log("this is the response",res.data)
+    return res.data?.data??[]
+
   }catch(error){
+    console.log("this is the error on pyment",error)
     throw error
   }
 }
@@ -106,7 +110,9 @@ export const AddPaymentMethod=async(data:{branch:string[];paymethods:string[]})=
     const res=await API.post("branch/payment",data)
     return res.data
   }catch(error){
+     console.log("this is the error",error)
     throw error
+   
   }
 }
 export const UpdatePayment=async({branchId,paymethods }:PaymentPayload)=>{

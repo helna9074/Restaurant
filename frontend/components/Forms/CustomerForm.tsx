@@ -4,6 +4,9 @@ import { Branch, CustomerRow, CustomerType } from "@/types/branch";
 import Input from "../ui/Input";
 import { FaXmark } from "react-icons/fa6";
 import Submitbtn from "../ui/submitbtn";
+import { useForm } from "react-hook-form";
+import { CustomerFormData, CustomerSchema } from "@/Schemas/branchSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 type branches = {
   value: string;
   label: string;
@@ -36,29 +39,40 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
       label: "Home delivery",
     },
   ];
-  const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
-  const [customer, setCustomer] = useState<string[]>([]);
+
+  const {handleSubmit,setValue,watch,formState:{errors}}=useForm<CustomerFormData>({
+    resolver:zodResolver(CustomerSchema),
+    defaultValues:{
+      selectedBranches:[],
+      customer:[]
+    }
+  })
+  const selectedBranches=watch("selectedBranches")
+  const customer=watch("customer")
   const selectedBranchOptions = branches.filter((b) =>
     selectedBranches.includes(b.value),
   );
   const selectedCustomerType = customerType.filter((p) =>
     customer.includes(p.value),
   );
+  const submitHandler=(data:CustomerFormData)=>{
+    onSubmit(data.selectedBranches,data.customer)
+  }
   useEffect(() => {
     if (initialData) {
-      setSelectedBranches([initialData.branch._id]);
-      setCustomer(initialData.types || []);
+      setValue("selectedBranches",[initialData.branch._id]);
+      setValue("customer",initialData.types || []);
     }
   }, [initialData]);
   // const [selectedValue, setSelectedValue] = useState("");
   // const [paymentValue, setPaymentValue] = useState("");
   return (
-    <div className="flex flex-col gap-3 items-center w-full justify-center">
+    <form onSubmit={handleSubmit(submitHandler)} className="flex flex-col gap-3 items-center w-full justify-center">
       <div className="w-1/2">
         <FormSelect
           placeholder="Select Branch"
           options={branches}
-          onChange={(val) => {setSelectedBranches(val as string[]);console.log(val,"val of branch")}}
+          onChange={(val) => {setValue("selectedBranches",val  as string[])}}
           value={selectedBranches}
            isMulti={!isEdit}
           disabled={isEdit}
@@ -75,8 +89,7 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
               <FaXmark
                 className=" text-secondary hover:text-red-500 text-sm"
                 onClick={() =>
-                  setSelectedBranches((prev) =>
-                    prev.filter((v) => v !== branch.value),
+                  setValue("selectedBranches",selectedBranches.filter((v)=>v!==branch.value)
                   )
                 }
               />
@@ -89,9 +102,10 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
           placeholder="Select"
           label="Select Customer Type"
           options={customerType}
-          onChange={(val) =>{ setCustomer(val as string[]);console.log(val,"val of customer")}}
+          onChange={(val) =>{ setValue("customer",val as string[]);console.log(val,"val of customer")}}
           value={customer}
           isMulti={true}
+          error={errors.customer?.message}
         />
       </div>
       <div className="w-1/2 flex flex-wrap gap-2">
@@ -105,7 +119,7 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
               <FaXmark
                 className=" text-secondary hover:text-red-500 text-sm"
                 onClick={() =>
-                  setCustomer((prev) => prev.filter((v) => v !== c.value))
+                  setValue("customer",customer.filter((v)=>v!==c.value))
                 }
               />
             </div>
@@ -114,13 +128,13 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
       </div>
       <div className="w-1/2 flex justify-end">
         <Submitbtn
-        type="button"
+        type="submit"
           label="Add"
           loading={isSubmitting}
-          onClick={() => onSubmit(selectedBranches, customer)}
+         
         />
       </div>
-    </div>
+    </form>
   );
 };
 

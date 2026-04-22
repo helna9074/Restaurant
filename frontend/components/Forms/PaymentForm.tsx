@@ -4,6 +4,9 @@ import { Branch, PaymentMethod } from "@/types/branch";
 import Input from "../ui/Input";
 import { FaXmark } from "react-icons/fa6";
 import Submitbtn from "../ui/submitbtn";
+import { useForm } from "react-hook-form";
+import { PaymentFormData, PaymentSchema } from "@/Schemas/branchSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 type branches = {
   value: string;
   label: string;
@@ -32,29 +35,39 @@ const PaymentForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Pr
     },
   
   ];
-  const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
-  const [payment, setPayment] = useState<string[]>([]);
+   const {handleSubmit,setValue,watch,formState:{errors}}=useForm<PaymentFormData>({
+      resolver:zodResolver(PaymentSchema),
+      defaultValues:{
+        selectedBranches:[],
+        payment:[]
+      }
+    })
+  const selectedBranches=watch("selectedBranches")
+  const payment=watch("payment")  
   const selectedBranchOptions = branches.filter((b) =>
     selectedBranches.includes(b.value),
   );
   const selectedPaymentType = PaymentMethods.filter((p) =>
     payment.includes(p.value),
   );
+   const submitHandler=(data:PaymentFormData)=>{
+      onSubmit(data.selectedBranches,data.payment)
+    }
   useEffect(() => {
     if (initialData) {
-      setSelectedBranches([initialData.branchId]);
-      setPayment(initialData.paymethods || []);
+      setValue("selectedBranches",[initialData.branchId]);
+      setValue("payment",initialData.paymethods || []);
     }
   }, [initialData]);
   // const [selectedValue, setSelectedValue] = useState("");
   // const [paymentValue, setPaymentValue] = useState("");
   return (
-    <div className="flex flex-col gap-3 items-center w-full justify-center">
+    <form onSubmit={handleSubmit(submitHandler)} className="flex flex-col gap-3 items-center w-full justify-center">
       <div className="w-1/2">
         <FormSelect
           placeholder="Select Branch"
           options={branches}
-          onChange={(val) => {setSelectedBranches(val as string[]);console.log(val,"val of branch")}}
+          onChange={(val) => {setValue("selectedBranches",val as string[]);console.log(val,"val of branch")}}
           value={selectedBranches}
           isMulti={!isEdit}
           disabled={isEdit}
@@ -73,8 +86,7 @@ const PaymentForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Pr
               <FaXmark
                 className=" text-secondary hover:text-red-500 text-sm"
                 onClick={() =>
-                  setSelectedBranches((prev) =>
-                    prev.filter((v) => v !== branch.value),
+                  setValue("selectedBranches",selectedBranches.filter((v)=>v!==branch.value)
                   )
                 }
               />
@@ -87,7 +99,7 @@ const PaymentForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Pr
           placeholder="Select"
           label="Select Payment Method"
           options={PaymentMethods}
-          onChange={(val) =>{ setPayment(val as string[]);console.log(val,"val of payment")}}
+          onChange={(val) =>{ setValue("payment",val as string[]);console.log(val,"val of payment")}}
           value={payment}
           isMulti={true}
         
@@ -104,7 +116,7 @@ const PaymentForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Pr
               <FaXmark
                 className=" text-secondary hover:text-red-500 text-sm"
                 onClick={() =>
-                  setPayment((prev) => prev.filter((v) => v !== c.value))
+                  setValue("payment",payment.filter((v) => v !== c.value))
                 }
               />
             </div>
@@ -113,13 +125,13 @@ const PaymentForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Pr
       </div>
       <div className="w-1/2 flex justify-end">
         <Submitbtn
-        type="button"
+        type="submit"
           label="Add"
           loading={isSubmitting}
-          onClick={() => onSubmit(selectedBranches, payment)}
+       
         />
       </div>
-    </div>
+    </form>
   );
 };
 

@@ -1,25 +1,31 @@
-'use client'
-import { Branch } from '@/types/branch';
-import { createBranch, DeleteBranch, getBranch, updateBranchdata } from '@/service/API/branchApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useState } from 'react'
-import toast from 'react-hot-toast';
-import AddButton from '../ui/AddButton';
-import { FaMagic } from 'react-icons/fa';
-import BranchTableClient from './BranchTableClient';
-import { Modal } from '../ui/Modal';
-import BranchForm from '../Forms/BranchForm';
-import BranchInfo from './BranchInfo';
-import ConfirmAlert from '../ui/DeleteDialogue';
+"use client";
+import { Branch } from "@/types/branch";
+import {
+  createBranch,
+  DeleteBranch,
+  getBranch,
+  updateBranchdata,
+} from "@/service/API/branchApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import AddButton from "../ui/AddButton";
+import { FaMagic } from "react-icons/fa";
+import BranchTableClient from "./BranchTableClient";
+import { Modal } from "../ui/Modal";
+import BranchForm from "../Forms/BranchForm";
+import BranchInfo from "../ui/InfoRenderer";
+import ConfirmAlert from "../ui/DeleteDialogue";
+import { Branchsections } from "./branchViewConfig";
 
 const BranchSection = () => {
-     const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [isDelete, setIsDelete] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const[viewId,setViewId]=useState<string|null>(null)
-  const[isViewOpen,setIsViewOpen]=useState(false)
+  const [viewId, setViewId] = useState<string | null>(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["branch", editId ?? ""],
@@ -77,25 +83,29 @@ const BranchSection = () => {
     setDeleteId(id);
     console.log("this is the id getted", id);
   };
-  const {data:viewData,isLoading:viewLoading}=useQuery({
-    queryKey:["branch-view",viewId],
-    queryFn:()=>getBranch(viewId!),
-    enabled:!!viewId,
-  })
-  const handleView=(id:string)=>{
-    setViewId(id)
-    setIsViewOpen(true)
-  }
+  const { data: viewData, isLoading: viewLoading } = useQuery({
+    queryKey: ["branch-view", viewId],
+    queryFn: () => getBranch(viewId!),
+    enabled: !!viewId,
+  });
+  const handleView = (id: string) => {
+    setViewId(id);
+    setIsViewOpen(true);
+  };
   return (
     <div>
-       <div className="flex ms-auto mb-2">
+      <div className="flex ms-auto mb-2">
         <AddButton
           label="Add Branch"
           icon={FaMagic}
           onClick={() => setOpen(true)}
         />
       </div>
-      <BranchTableClient OnEdit={OnEdit} OnDelete={DeleteHandler}  OnView={handleView}/>
+      <BranchTableClient
+        OnEdit={OnEdit}
+        OnDelete={DeleteHandler}
+        OnView={handleView}
+      />
       {open && (
         <Modal open={open} onClose={() => setOpen(false)} title="Add Branch">
           {editId && isLoading ? (
@@ -115,12 +125,16 @@ const BranchSection = () => {
           )}
         </Modal>
       )}
-      {isViewOpen&&(
+      {isViewOpen && (
         <Modal open={isViewOpen} onClose={() => setIsViewOpen(false)} title="">
-          {viewLoading?<p>Loading.....</p>:<BranchInfo data={viewData?.branch}/>}
+          {viewLoading ? (
+            <p>Loading.....</p>
+          ) : (
+            <BranchInfo data={viewData?.branch} sections={Branchsections} imageKey="logo" />
+          )}
         </Modal>
       )}
-<ConfirmAlert
+      <ConfirmAlert
         isOpen={isDelete}
         closeModal={() => setIsDelete(false)}
         onConfirm={() => deleteMutation.mutate(deleteId!)}
@@ -130,7 +144,7 @@ const BranchSection = () => {
         isLoading={deleteMutation.isPending}
       />
     </div>
-  )
-}
+  );
+};
 
-export default BranchSection
+export default BranchSection;

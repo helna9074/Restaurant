@@ -15,7 +15,7 @@ interface TableProps<T>{
 }
 const Table = <T,>({columns,data,topSection}:TableProps<T>) => {
   return (
-    <div className='w-full p-3 rounded-2xl flex flex-col gap-2'>
+    <div className='w-full overflow-x-auto scrollbar-thin p-3 rounded-2xl flex flex-col gap-2'>
 
       {topSection&&(
         <div className='flex justify-between items-center mb-4'>
@@ -26,7 +26,7 @@ const Table = <T,>({columns,data,topSection}:TableProps<T>) => {
         <thead className=''>
             <tr className="">
             {columns.map((col)=>(
-                <th key={String(col.accessor)} className={`${col.style??"text-start"} py-3 border-b border-border-b`}>
+                <th key={String(col.accessor)} className={`${col.style??"text-start"} py-3 px-3 border-b border-border-b whitespace-nowrap`}>
                     {col.headers}
                 </th>
             ))}
@@ -34,12 +34,12 @@ const Table = <T,>({columns,data,topSection}:TableProps<T>) => {
         </thead>
         <tbody>
             {data.map((row,index)=>(
-                <tr key={index} className='border-b border-border-b'
+                <tr key={index} className='border-b border-border-b '
                 >
                     {columns.map((col)=>{
                         const value=row[col.accessor]
                      return(
-                        <td key={String(col.accessor)} className={`${col.style??'text-start'} py-3`}>
+                        <td key={String(col.accessor)} className={`${col.style??'text-start '} px-3 py-3 whitespace-nowrap`}>
                             {col.render?col.render(value,row):String(value??"-")}
                             {}</td>
                      )
