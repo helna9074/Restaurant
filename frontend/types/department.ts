@@ -49,6 +49,8 @@ export type EmployeePayload={
 }
 export type EmployeeTableData={
     _id:string,
+    employeeCode?:string,
+    branch?:string,
     firstName:string,
     lastName:string,
     email:string,

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import FormSelect from "../ui/FormSelect";
+import FormSelect from "@/components/ui/FormSelect";
 import { Branch, CustomerRow, CustomerType } from "@/types/branch";
-import Input from "../ui/Input";
+import Input from "@/components/ui/Input";
 import { FaXmark } from "react-icons/fa6";
-import Submitbtn from "../ui/submitbtn";
+import Submitbtn from "@/components/ui/submitbtn";
 import { useForm } from "react-hook-form";
 import { DepartmentFormData, DepartmentSchema } from "@/Schemas/departmentSchema";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -23,11 +23,11 @@ interface Option{
 const TopSection = ({search,handleSearchChange,setIsClose,setBranch,selectedBranch,isclose,branchOptions}:Props) => {
  
   return (
-    <div className=" w-full  flex lg:flex-row flex-col justify-between gap-5 items-center mb-4">
+    <div className=" w-full flex lg:flex-row flex-col justify-between gap-5 items-center mb-4">
       <div className="w-72">
         <FormSelect
           setOpen={setIsClose}
-          className="w-full p-4! h-12!"
+          className="p-4! h-12!"
           placeholder="Select Branch"
           options={branchOptions}
           onChange={(val) => setBranch(val as string)}
@@ -35,6 +35,7 @@ const TopSection = ({search,handleSearchChange,setIsClose,setBranch,selectedBran
           open={isclose}
         />
       </div>
+      
       <SearchBar  value={search} onChange={handleSearchChange} />
     </div>
   )

@@ -109,7 +109,7 @@ export const GetEmployees=async(search="",branchId:string)=>{
     console.log("getEmployee is loading",branchId)
     const res=await API.get("dpt/emp",{params:{branchId,search}})
     console.log("this is the response",res.data)
-    return res.data.data||[]
+    return res.data
 
   }catch(error){
     console.log(error)

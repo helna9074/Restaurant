@@ -5,7 +5,7 @@ import Table from "../ui/Table";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useBranches } from "@/hooks/useBranch";
 import AddButton from "../ui/AddButton";
-import { FaUsers } from "react-icons/fa";
+import { BsFillPersonVcardFill } from "react-icons/bs";
 import { Modal } from "../ui/Modal";
 
 import toast from "react-hot-toast";
@@ -21,7 +21,7 @@ import {
   AddEmployee,
   DeleteEmployee,
   GetEmpById,
-  GetEmployees,
+
   UpdateEmployee,
 } from "@/service/API/departmentApi";
 import { useDepartment } from "@/hooks/useDepartment";
@@ -29,7 +29,7 @@ import { useDepartment } from "@/hooks/useDepartment";
 import {
   EmployeeFormState,
   EmployeeTableData,
-  PositionType,
+
 } from "@/types/department";
 import PersonalForm from "../Forms/EmployeeForms/PersonalForm";
 import BranchTabs from "../branch/BranchTabs";
@@ -40,6 +40,7 @@ import { usePosition } from "@/hooks/usePosition";
 import { FormatDate } from "@/helper/date";
 import InfoRenderer from "../ui/InfoRenderer";
 import { EmployeeSections } from "../branch/branchViewConfig";
+import { useEmployee } from "@/hooks/useEmployee";
 
 const Employee = () => {
   const [selectedBranch, setBranch] = useState("");
@@ -105,12 +106,13 @@ const { data: viewData, isLoading: viewLoading } = useQuery({
     // setPage(1)
     console.log("this is the value", value);
   };
-  const { data, isLoading } = useQuery({
-    queryKey: ["employees", debouncedValue, selectedBranch],
-    queryFn: () => GetEmployees(debouncedValue, selectedBranch),
-    enabled: !!selectedBranch,
-    staleTime: 2 * 60 * 1000,
-  });
+    const {data,isLoading}=useEmployee(debouncedValue,selectedBranch)
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ["employees", debouncedValue, selectedBranch],
+  //   queryFn: () => GetEmployees(debouncedValue, selectedBranch),
+  //   enabled: !!selectedBranch,
+  //   staleTime: 2 * 60 * 1000,
+  // });
   const createMutation = useMutation({
     mutationFn: AddEmployee,
     onSuccess: () => {
@@ -135,17 +137,7 @@ const { data: viewData, isLoading: viewLoading } = useQuery({
   }
 }, [editData]);
   const onEdit = async (row: EmployeeTableData) => {
-    // const employee = await GetEmpById(row._id);
-    // setEmployeeData({
-    //   personal: {
-    //     ...employee.personalDetails,
-    //     branch: employee.branch,
-    //   },
-    //   work: {
-    //     ...employee.workInformation,
-    //     joiningDate: FormatDate(employee.workInformation.joiningDate),
-    //   },
-    // });
+  
     setEditId(row._id);
     setIsEdit(true);
     setIsOpen(true);
@@ -224,7 +216,7 @@ const { data: viewData, isLoading: viewLoading } = useQuery({
     <div className="flex flex-col">
       <AddButton
         label="Add Employee"
-        icon={FaUsers}
+        icon={BsFillPersonVcardFill}
         onClick={() => {
           setIsOpen(true);
           setIsEdit(false);
@@ -239,6 +231,14 @@ const { data: viewData, isLoading: viewLoading } = useQuery({
           <>
             <Table<EmployeeTableData>
               columns={[
+                {
+                  headers: "No",
+                  accessor: "employeeCode",
+                  style: "text-left pl-6",
+                  render: (_: any, row: EmployeeTableData) => (
+                    <div className="">{row?.employeeCode}</div>
+                  ),
+                },
                 {
                   headers: "First Name",
                   accessor: "firstName",

@@ -21,7 +21,7 @@ import { PaymentMethod, Paymentrow } from "@/types/branch";
 import EditDeleteIcons from "../TableComponents/EditDeleteIcons";
 import ConfirmAlert from "../ui/DeleteDialogue";
 
-import PaymentForm from "../Forms/PaymentForm";
+import PaymentForm from "@/components/Forms/BranchForms/PaymentForm";
 
 import { SkeletonTable } from "../wrapper/SkeletonTable";
 import { PaymentRows, Rows } from "@/helper/date";

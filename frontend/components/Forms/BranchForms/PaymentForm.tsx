@@ -1,67 +1,62 @@
 import React, { useEffect, useState } from "react";
-import FormSelect from "../ui/FormSelect";
-import { Branch, CustomerRow, CustomerType } from "@/types/branch";
-import Input from "../ui/Input";
+import FormSelect from "@/components/ui/FormSelect";
+import { Branch, PaymentMethod } from "@/types/branch";
+import Input from "@/components/ui/Input";
 import { FaXmark } from "react-icons/fa6";
-import Submitbtn from "../ui/submitbtn";
+import Submitbtn from "@/components/ui/submitbtn";
 import { useForm } from "react-hook-form";
-import { CustomerFormData, CustomerSchema } from "@/Schemas/branchSchema";
+import { PaymentFormData, PaymentSchema } from "@/Schemas/branchSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 type branches = {
   value: string;
   label: string;
   subLabel: string;
-  
 };
 interface Props {
   branches: branches[];
-  isEdit:boolean
-  onSubmit: (selectedBranches: string[], customer: string[]) => void;
-  initialData?: CustomerType | null;
+  onSubmit: (selectedBranches: string[], payment: string[]) => void;
+  initialData?: PaymentMethod | null;
   isSubmitting?: boolean;
+  isEdit:boolean
 }
-const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Props) => {
-  const customerType = [
+const PaymentForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Props) => {
+  const PaymentMethods = [
     {
-      value: "Walk in customer",
-      label: "Walk in customer",
+      value: "Card",
+      label: "Card",
     },
     {
-      value: "Take away",
-      label: "Take away",
+      value: "Cash",
+      label: "Cash",
     },
     {
-      value: "Dine in",
-      label: "Dine in",
+      value: "Online",
+      label: "Online",
     },
-    {
-      value: "Home delivery",
-      label: "Home delivery",
-    },
+  
   ];
-
-  const {handleSubmit,setValue,watch,formState:{errors}}=useForm<CustomerFormData>({
-    resolver:zodResolver(CustomerSchema),
-    defaultValues:{
-      selectedBranches:[],
-      customer:[]
-    }
-  })
+   const {handleSubmit,setValue,watch,formState:{errors}}=useForm<PaymentFormData>({
+      resolver:zodResolver(PaymentSchema),
+      defaultValues:{
+        selectedBranches:[],
+        payment:[]
+      }
+    })
   const selectedBranches=watch("selectedBranches")
-  const customer=watch("customer")
+  const payment=watch("payment")  
   const selectedBranchOptions = branches.filter((b) =>
     selectedBranches.includes(b.value),
   );
-  const selectedCustomerType = customerType.filter((p) =>
-    customer.includes(p.value),
+  const selectedPaymentType = PaymentMethods.filter((p) =>
+    payment.includes(p.value),
   );
-  const submitHandler=(data:CustomerFormData)=>{
-    onSubmit(data.selectedBranches,data.customer)
-  }
+   const submitHandler=(data:PaymentFormData)=>{
+      onSubmit(data.selectedBranches,data.payment)
+    }
   useEffect(() => {
     if (initialData) {
-      setValue("selectedBranches",[initialData.branch._id]);
-      setValue("customer",initialData.types || []);
+      setValue("selectedBranches",[initialData.branchId]);
+      setValue("payment",initialData.paymethods || []);
     }
   }, [initialData]);
   // const [selectedValue, setSelectedValue] = useState("");
@@ -72,10 +67,12 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
         <FormSelect
           placeholder="Select Branch"
           options={branches}
-          onChange={(val) => {setValue("selectedBranches",val  as string[])}}
+          onChange={(val) => {setValue("selectedBranches",val as string[]);console.log(val,"val of branch")}}
           value={selectedBranches}
-           isMulti={!isEdit}
+          isMulti={!isEdit}
           disabled={isEdit}
+          
+       
         />
       </div>
       <div className="w-1/2 flex flex-wrap gap-2">
@@ -100,16 +97,16 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
       <div className="w-1/2">
         <FormSelect
           placeholder="Select"
-          label="Select Customer Type"
-          options={customerType}
-          onChange={(val) =>{ setValue("customer",val as string[]);console.log(val,"val of customer")}}
-          value={customer}
+          label="Select Payment Method"
+          options={PaymentMethods}
+          onChange={(val) =>{ setValue("payment",val as string[]);console.log(val,"val of payment")}}
+          value={payment}
           isMulti={true}
-          error={errors.customer?.message}
+        
         />
       </div>
       <div className="w-1/2 flex flex-wrap gap-2">
-        {selectedCustomerType.map((c) => (
+        {selectedPaymentType.map((c) => (
           <div
             key={c.value}
             className="bg-input-box relative text-secondary px-2 py-1 rounded-md "
@@ -119,7 +116,7 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
               <FaXmark
                 className=" text-secondary hover:text-red-500 text-sm"
                 onClick={() =>
-                  setValue("customer",customer.filter((v)=>v!==c.value))
+                  setValue("payment",payment.filter((v) => v !== c.value))
                 }
               />
             </div>
@@ -131,11 +128,11 @@ const CustomerForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: P
         type="submit"
           label="Add"
           loading={isSubmitting}
-         
+       
         />
       </div>
     </form>
   );
 };
 
-export default CustomerForm;
+export default PaymentForm;

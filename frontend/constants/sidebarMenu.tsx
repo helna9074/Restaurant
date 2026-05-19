@@ -1,3 +1,4 @@
+
 import { FaHome } from "react-icons/fa";
 import { HiMiniClipboardDocumentList } from "react-icons/hi2";
 import { FaUserCog } from "react-icons/fa";
@@ -36,7 +37,7 @@ export const sidebarMenu = [
   {
     title: "User",
     icon: FaUserCog,
-    href: "/users",
+    href: "/user",
   },
   {
     title: "Tables&Floors",
@@ -45,6 +46,12 @@ export const sidebarMenu = [
 
     href: "/tables",
   },
+    {
+    title: "Kitchen Setup",
+    icon: chef,
+    type: "image",
+    href: "/kitchen",
+  },
   {
     title: "Menu Setup",
     icon: menu,
@@ -52,12 +59,7 @@ export const sidebarMenu = [
     type: "image",
     href: "/menu",
   },
-  {
-    title: "Kitchen Setup",
-    icon: chef,
-    type: "image",
-    href: "/kitchen",
-  },
+
 ]
 },
 { 

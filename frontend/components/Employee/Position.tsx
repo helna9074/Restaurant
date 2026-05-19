@@ -5,12 +5,12 @@ import Table from "../ui/Table";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useBranches } from "@/hooks/useBranch";
 import AddButton from "../ui/AddButton";
-import { FaUsers } from "react-icons/fa";
+
 import { Modal } from "../ui/Modal";
-import CustomerForm from "../Forms/CustomerForm";
+
 
 import toast from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import EditDeleteIcons from "../TableComponents/EditDeleteIcons";
 import ConfirmAlert from "../ui/DeleteDialogue";
@@ -18,11 +18,12 @@ import ConfirmAlert from "../ui/DeleteDialogue";
 import { SkeletonTable } from "../wrapper/SkeletonTable";
 
 import TopSection from "../ui/TopSection";
-import { AddPostion, DeletePosition, GetPositions, UpdatePosition } from '@/service/API/departmentApi';
+import { AddPostion, DeletePosition, UpdatePosition } from '@/service/API/departmentApi';
 import { useDepartment } from '@/hooks/useDepartment';
-import PositionForm from '../Forms/PositionForm';
+import PositionForm from '@/components/Forms/EmployeeForms/PositionForm';
 import { PositionType } from '@/types/department';
 import { usePosition } from '@/hooks/usePosition';
+import { FaPeopleLine } from 'react-icons/fa6';
 
 const Position = () => {
   const [selectedBranch, setBranch] = useState("");
@@ -138,7 +139,7 @@ const handleSearchChange=(value:string)=>{
     <div className="flex flex-col">
       <AddButton
         label="Add Customer"
-        icon={FaUsers}
+        icon={FaPeopleLine}
         onClick={() => {setIsOpen(true);setIsEdit(false)}}
       />
       <div className="bg-card rounded-2xl flex flex-col gap-3 mt-4">

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Input from "../ui/Input";
-import FormSelect from "../ui/FormSelect";
+import Input from "@/components/ui/Input";
+import FormSelect from "@/components/ui/FormSelect";
 import { SlPicture } from "react-icons/sl";
 import {
   Countryopt,
@@ -11,8 +11,8 @@ import {
 import Checkbox from "@/components/ui/checkbox";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BranchFormDAta, branchSchema } from "../../Schemas/branchSchema";
-import Submitbtn from "../ui/submitbtn";
+import { BranchFormDAta, branchSchema } from "@/Schemas/branchSchema";
+import Submitbtn from "@/components/ui/submitbtn";
 import { Branch } from "@/types/branch";
 
 interface Props {

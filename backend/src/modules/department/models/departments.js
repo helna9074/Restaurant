@@ -6,7 +6,7 @@ const DepartmentSchema=new Schema({
             type:mongoose.Types.ObjectId,
             ref:"Branch",
             required:true,
-            unique:true
+           
          
         },
     

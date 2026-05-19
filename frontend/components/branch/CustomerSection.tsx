@@ -7,7 +7,7 @@ import { useBranches } from "@/hooks/useBranch";
 import AddButton from "../ui/AddButton";
 import { FaUsers } from "react-icons/fa";
 import { Modal } from "../ui/Modal";
-import CustomerForm from "../Forms/CustomerForm";
+import CustomerForm from "@/components/Forms/BranchForms/CustomerForm";
 import {
   AddCustomerType,
   DeleteCustomer,

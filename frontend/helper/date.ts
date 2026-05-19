@@ -2,7 +2,7 @@ import { CustomerRow, CustomerType, PaymentMethod, Paymentrow } from "@/types/br
 
 import { MenuItems } from "@headlessui/react"
 
-export const FormatDate=(date:Date|string)=>{
+export const FormatDate=(date:any)=>{
     if(!date) return "-"
     const d=new Date(date)
     const yyy=d.getFullYear()

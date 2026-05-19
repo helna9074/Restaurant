@@ -13,7 +13,7 @@ import AddButton from "../ui/AddButton";
 import { FaMagic } from "react-icons/fa";
 import BranchTableClient from "./BranchTableClient";
 import { Modal } from "../ui/Modal";
-import BranchForm from "../Forms/BranchForm";
+import BranchForm from "@/components/Forms/BranchForms/BranchForm";
 import BranchInfo from "../ui/InfoRenderer";
 import ConfirmAlert from "../ui/DeleteDialogue";
 import { Branchsections } from "./branchViewConfig";

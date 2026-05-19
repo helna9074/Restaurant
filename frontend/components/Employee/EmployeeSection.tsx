@@ -16,7 +16,7 @@ import ConfirmAlert from "../ui/DeleteDialogue";
 
 import { SkeletonTable } from "../wrapper/SkeletonTable";
 
-import DepartmentForm from "../Forms/DepartmentForm";
+import DepartmentForm from "@/components/Forms/EmployeeForms/DepartmentForm";
 import { AddDpt, DeleteDpt, UpdateDpt } from "@/service/API/departmentApi";
 import { useDepartment } from "@/hooks/useDepartment";
 import TopSection from "../ui/TopSection";

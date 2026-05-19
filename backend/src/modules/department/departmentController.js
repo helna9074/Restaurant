@@ -40,14 +40,7 @@ const data = await GetDepartments({branchId,search});
       message:"fetched successfully",
       data,
     });
-  //  }
-  //  const user=await User.findById(req.user.id)
-  //  const dpts=await Departments.find({branch:{$in:user.branches}})
-  //  return res.status(200).json({
-  //       dpts,
-      
-       
-  //  })
+ 
     
   } catch (error) {
     console.log("FULL ERROR 👉", error); // 👈 VERY IMPORTANT
@@ -204,12 +197,12 @@ export const AddEmployee=async(req,res)=>{
 }
 export const GetEmployees = async (req, res) => {
   try {
-   
+    let data;
    const branch=req.query.branchId;
    const search=req.query.search||"";
    
    if(req.user.role==="admin"){
-const data = await GetEmp({branch,search});
+ data = await GetEmp({branch,search});
    
  
     return res.status(200).json({
@@ -218,9 +211,9 @@ const data = await GetEmp({branch,search});
     });
    }
    const user=await User.findById(req.user.id)
-   const dpts=await Employee.find({branch:{$in:user.branches}})
+    data=await Employee.find({branch:{$in:user.branches}})
    return res.status(200).json({
-        dpts,
+        data,
       
        
    })

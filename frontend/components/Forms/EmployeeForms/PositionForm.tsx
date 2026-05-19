@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import FormSelect from "../ui/FormSelect";
+import FormSelect from "@/components/ui/FormSelect";
 
 import { FaXmark } from "react-icons/fa6";
-import Submitbtn from "../ui/submitbtn";
+import Submitbtn from "@/components/ui/submitbtn";
 import { useForm } from "react-hook-form";
 
 import { PositionFormData } from "@/Schemas/departmentSchema";
 import { PositionType } from "@/types/department";
 import { IoIosAdd } from "react-icons/io";
+import TagInput from "@/components/ui/TabInput";
 type branches = {
   value: string;
   label: string;
@@ -98,10 +99,11 @@ const PositionForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit,dep
           error={errors.selectedDepartment?.message}
         />
       </div>
-      <div className=" bg-input-box p-3 rounded-md flex  text-black">
+      <TagInput placeholder="Add Positions" onAdd={AddPosition} label="Positions" />
+      {/* <div className=" bg-input-box p-3 rounded-md flex  text-black"> */}
             {/* <input className="outline-0 flex-1"/> */}
              
-              <input
+              {/* <input
                 ref={inputRef}
                 className="outline-0 flex-1"
                 placeholder="Add Positions"
@@ -116,17 +118,17 @@ const PositionForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit,dep
                   }
                 }}
       
-                
-              />
-       <IoIosAdd size={30} className="text-black cursor-pointer hover:scale-110 transition " onClick={()=>{
+                 */}
+              {/* /> */}
+       {/* <IoIosAdd size={30} className="text-black cursor-pointer hover:scale-110 transition " onClick={()=>{
        const value=inputRef.current?.value.trim()
        
         AddPosition(value||"")
         if(inputRef.current) inputRef.current.value=""
        }
       
-       } />
-            </div>
+       } /> */}
+            {/* </div> */}
       <div className="w-1/2 flex flex-wrap gap-2">
         {selectedPositions.slice(0,isEdit?1:undefined).map((c) => (
           <div

@@ -15,11 +15,11 @@ const SideBar = () => {
       className={`sidebar w-52 rounded-3xl flex flex-col lg:h-[calc(100vh-15px)]  h-screen   lg:mx-3 lg:px-3 py-5 text-center text-text-primary fixed top-3 left-0 lg:translate-x-0 transition-transform duration-300 z-52 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
       <h1 className="">My Restaurant</h1>
-      <nav className="flex flex-col gap-10 ">
+      <nav className="flex flex-col gap-3">
         {sidebarMenu.map((section) => (
           <div
             key={section.title}
-            className="flex flex-col gap-5 h-full items-start"
+            className="flex flex-col gap-1 h-full items-start"
           >
             <h2 className="text-xs font-light px-3 text-center ">
               {section.title}

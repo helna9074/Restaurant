@@ -3,6 +3,7 @@ import Pagination from '../TableComponents/Pagination';
 
 interface Columns<T>{
     headers:string;
+    id?:string
     accessor:keyof T; //The key from the row data that this column displays
     render?:(value:T[keyof T],row:T)=>React.ReactNode
     style?:string
@@ -13,6 +14,7 @@ interface TableProps<T>{
 
     topSection?:React.ReactNode;
 }
+
 const Table = <T,>({columns,data,topSection}:TableProps<T>) => {
   return (
     <div className='w-full overflow-x-auto scrollbar-thin p-3 rounded-2xl flex flex-col gap-2'>
@@ -25,8 +27,8 @@ const Table = <T,>({columns,data,topSection}:TableProps<T>) => {
       <table className='w-full p-3'>
         <thead className=''>
             <tr className="">
-            {columns.map((col)=>(
-                <th key={String(col.accessor)} className={`${col.style??"text-start"} py-3 px-3 border-b border-border-b whitespace-nowrap`}>
+            {columns.map((col,index)=>(
+                <th key={col.id??String(col.accessor)} className={`${col.style??"text-start"} py-3 px-3 border-b border-border-b whitespace-nowrap`}>
                     {col.headers}
                 </th>
             ))}
@@ -39,7 +41,7 @@ const Table = <T,>({columns,data,topSection}:TableProps<T>) => {
                     {columns.map((col)=>{
                         const value=row[col.accessor]
                      return(
-                        <td key={String(col.accessor)} className={`${col.style??'text-start '} px-3 py-3 whitespace-nowrap`}>
+                        <td key={col.id??String(col.accessor)} className={`${col.style??'text-start '} px-3 py-3 whitespace-nowrap`}>
                             {col.render?col.render(value,row):String(value??"-")}
                             {}</td>
                      )

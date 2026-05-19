@@ -4,6 +4,10 @@ const Schema=mongoose.Schema
 const EmployeeSchema=new Schema(
 {
    branch:{type:Schema.Types.ObjectId,required:true,ref:"Branch"},
+   employeeCode: {
+  type: String,
+  unique: true
+},
   personalDetails: {
    
     firstName:{type:String,required:true},

@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { MdOutlineArrowDropUp } from "react-icons/md";
+
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -28,8 +26,7 @@ interface Props {
   className?: string;
   setOpen?: (value: boolean) => void;
   open?: boolean;
- 
-  isMulti?:boolean;
+  isMulti?: boolean;
 }
 
 const FormSelect = ({
@@ -43,9 +40,8 @@ const FormSelect = ({
   error,
   disabled,
   className,
-  
- 
-  isMulti
+
+  isMulti,
 }: Props) => {
   const [search, setSearch] = useState("");
   const debouncedValue = useDebounce(search, 400);
@@ -56,9 +52,7 @@ const FormSelect = ({
   const handleSelect = (val: string) => {
     if (isMulti) {
       let updated: string[];
-      // if (selectedValues.includes(val)) {
-      //   updated = selectedValues.filter((v) => v !== val);
-      // } else {
+
       updated = Array.from(new Set([...selectedValues, val]));
 
       onChange?.(updated);
@@ -75,14 +69,13 @@ const FormSelect = ({
         key={Array.isArray(value) ? value.join(",") : value}
         value={isMulti ? undefined : (value as string)}
         onValueChange={handleSelect}
-       
         onOpenChange={setOpen}
         open={open}
       >
-        <SelectTrigger disabled={disabled}
+        <SelectTrigger
+          disabled={disabled}
           className={`${className ? className : "w-full p-3! h-fit! bg-input-box! rounded-xl  text-text-secondary"}  `}
         >
-         
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent
@@ -104,7 +97,7 @@ const FormSelect = ({
               className="w-full mx-auto border rounded-lg"
             />
           </div>
-         
+
           {filteredOptions.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               <div className="flex flex-col text-start  ">
