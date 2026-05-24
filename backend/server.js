@@ -8,7 +8,7 @@ import DepartmentRouter from './src/modules/department/router.js'
 import TableRouter from './src/modules/Table/router.js'
 import MenuRouter from './src/modules/Menu/router.js'
 import cookieParser from 'cookie-parser'
-
+import KitchenRouter from './src/modules/kitchen/router.js'
 const app=express()
 
 app.use(cors({
@@ -24,6 +24,7 @@ app.use('/user',UserRouter)
 app.use('/dpt',DepartmentRouter)
 app.use('/t&f',TableRouter)
 app.use('/menu',MenuRouter)
+app.use('/kitchen',KitchenRouter)
 
     
 

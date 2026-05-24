@@ -26,6 +26,7 @@ const MenuPage = () => {
       />
       {activeTab === "category" && <Category />}
       {activeTab === "menutype" && <Menu />}
+      {activeTab === "addons" && <div>Add Ons Content</div>}
     </div>
   );
 };

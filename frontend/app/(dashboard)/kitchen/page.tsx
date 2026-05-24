@@ -20,20 +20,22 @@ import { SkeletonTable } from "@/components/wrapper/SkeletonTable";
 import TopSection from "@/components/ui/TopSection";
 import { FaLayerGroup } from "react-icons/fa";
 
-import FloorForm from "@/components/Forms/TableForms/FloorForm";
-import { AddFloor, DeleteFloor, UpdateFloor } from "@/service/API/Floor&Table";
+
 import { AxiosError } from "axios";
 import { useFloor } from "@/hooks/useFloors";
-import { FloorTableData } from "@/types/table";
+import { kitchenTableData } from "@/types/kitchen";
+import KitchenForm from "@/components/Forms/KitchenForm";
+import { AddKitchen, DeleteKitchen, UpdateKitchen } from "@/service/API/kitchen";
+import { useKitchens } from "@/hooks/useKitchens";
 
 const KitchenPage = () => {
   const [selectedBranch, setBranch] = useState("");
   const [search, setSearch] = useState("");
 
   const [isclose, setIsClose] = useState(false);
-  const [deleteData, setDeleteData] = useState<FloorTableData | null>(null);
+  const [deleteData, setDeleteData] = useState<kitchenTableData | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [editData, setEditData] = useState<FloorTableData | null>(null);
+  const [editData, setEditData] = useState<kitchenTableData | null>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
@@ -43,7 +45,7 @@ const KitchenPage = () => {
 
   const debouncedValue = useDebounce(search, 400);
 
-  const { data, isLoading } = useFloor(selectedBranch, debouncedValue);
+  const { data, isLoading } = useKitchens(selectedBranch, debouncedValue);
   const branchOptions = branches.map((b) => ({
     value: b._id,
     label: b.name,
@@ -63,44 +65,44 @@ const KitchenPage = () => {
   };
 
   const createMutation = useMutation({
-    mutationFn: AddFloor,
+    mutationFn: AddKitchen,
     onSuccess: () => {
-      toast.success("Customer type added successfully");
+      toast.success("Kitchen added successfully");
       setIsOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["floor"] });
+      queryClient.invalidateQueries({ queryKey: ["kitchens"] });
     },
     onError: (error: AxiosError<{ message: string }>) => {
       const message = error?.response?.data?.message || "something went wrong";
       toast.error(message);
     },
   });
-  const onEdit = (row: FloorTableData) => {
+  const onEdit = (row: kitchenTableData) => {
     setIsEdit(true);
     setIsOpen(true);
     setEditData(row || null);
   };
-  const onDelete = (row: FloorTableData) => {
+  const onDelete = (row: kitchenTableData) => {
     setIsDelete(true);
     setDeleteData(row);
   };
   const updateMutation = useMutation({
-    mutationFn: UpdateFloor,
+    mutationFn: UpdateKitchen,
     onSuccess: () => {
-      toast.success("Customer type updated successfully");
+      toast.success("Kitchen updated successfully");
       setIsOpen(false);
       setEditData(null);
       setIsEdit(false);
-      queryClient.invalidateQueries({ queryKey: ["floor"] });
+      queryClient.invalidateQueries({ queryKey: ["kitchens"] });
     },
     onError: () => toast.error("Something went wrong"),
   });
   const deleteMutation = useMutation({
-    mutationFn: DeleteFloor,
+    mutationFn: DeleteKitchen,
     onSuccess: () => {
-      toast.success("Deleted successfully");
+      toast.success("Kitchen deleted successfully");
       setIsDelete(false);
       setDeleteData(null);
-      queryClient.invalidateQueries({ queryKey: ["floor"] });
+      queryClient.invalidateQueries({ queryKey: ["kitchens"] });
     },
     onError: () => toast.error("Something went wrong"),
   });
@@ -115,24 +117,24 @@ const KitchenPage = () => {
       branchOptions={branchOptions}
     />
   );
-  const SubmitFloors = async (
+  const SubmitKitchens = async (
     branchId: string,
-    floorName: string,
-    count: number,
+    kitchen: string,
+   
   ) => {
     // console.log("this is the data",department);
-    if (!branchId.length || !floorName.length || !count) return;
+    if (!branchId.length || !kitchen.length) return;
     if (editData) {
-      updateMutation.mutate({ id: editData._id, floorName, count });
+      updateMutation.mutate({ id: editData._id, kitchen });
     } else {
-      createMutation.mutate({ branchId, floorName, count });
+      createMutation.mutate({ branchId, kitchen} );
     }
   };
 
   return (
     <div className="flex flex-col">
       <AddButton
-        label="Add Customer"
+        label="Add Kitchen"
         icon={FaLayerGroup}
         onClick={() => {
           setIsOpen(true);
@@ -146,37 +148,23 @@ const KitchenPage = () => {
           </>
         ) : (
           <>
-            <Table<FloorTableData>
+            <Table<kitchenTableData>
               columns={[
                 {
-                  headers: "Restaurant",
-                  accessor: "restaurant",
+                  headers: "Kitchen Name",
+                  accessor: "kitchen",
                   style: "text-left pl-6",
-                  render: (_: any, row: FloorTableData) => (
-                    <div className="">{row?.restaurant}</div>
+                  render: (_: any, row: kitchenTableData) => (
+                    <div className="">{row?.kitchen}</div>
                   ),
                 },
-                {
-                  headers: "Floor Name",
-                  accessor: "name",
-                  style: "text-left pl-6",
-                  render: (_: any, row: FloorTableData) => (
-                    <div className="">{row.name}</div>
-                  ),
-                },
-                {
-                  headers: "No.of Tables",
-                  accessor: "count",
-                  style: "text-left pl-6",
-                  render: (_: any, row: FloorTableData) => (
-                    <div className="">{row.count}</div>
-                  ),
-                },
+              
+                
                 {
                   headers: "Action",
                   accessor: "action",
                   style: "text-right pr-6  ",
-                  render: (_: any, row: FloorTableData) => (
+                  render: (_: any, row: kitchenTableData) => (
                     <div className="flex justify-end ">
                       <EditDeleteIcons
                         OnDelete={() => onDelete(row)}
@@ -189,9 +177,7 @@ const KitchenPage = () => {
               data={data || []}
               topSection={topSection}
             />
-            {/* <div className="flex justify-end p-3">
- <Pagination page={page} totalPage={totalPage} onPageChange={setPage} />
-      </div> */}
+          
           </>
         )}
       </div>
@@ -203,11 +189,11 @@ const KitchenPage = () => {
         }}
         title="Add Position"
       >
-        <FloorForm
+        <KitchenForm
           branches={branchOptions}
           isEdit={isEdit}
           initialData={editData}
-          onSubmit={SubmitFloors}
+          onSubmit={SubmitKitchens}
           isSubmitting={createMutation.isPending || updateMutation.isPending}
         />
         {/* {CustomerError&& <p className="text-red-500">error in loading</p>} */}

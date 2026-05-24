@@ -9,6 +9,8 @@ import { FloorData, FloorSchema } from "@/Schemas/tableSchema";
 
 import Input from "@/components/ui/Input";
 import { FloorTableData } from "@/types/table";
+import { KitchenFormData, KitchenSchema } from "@/Schemas/kitchenSchema";
+import { kitchenTableData } from "@/types/kitchen";
 type branches = {
   value: string;
   label: string;
@@ -17,11 +19,11 @@ type branches = {
 interface Props {
   branches: branches[];
   isEdit: boolean;
-  onSubmit: (selectedBranch: string, floorName: string, count: number) => void;
-  initialData?: FloorTableData | null;
+  onSubmit: (selectedBranch: string, kitchen: string) => void;
+  initialData?: kitchenTableData | null;
   isSubmitting?: boolean;
 }
-const KitchenFloor = ({
+const KitchenForm = ({
   branches,
   onSubmit,
   initialData,
@@ -34,21 +36,20 @@ const KitchenFloor = ({
     watch,
     formState: { errors },
     register,
-  } = useForm<FloorData>({
-    resolver: zodResolver(FloorSchema),
+  } = useForm<KitchenFormData>({
+    resolver: zodResolver(KitchenSchema),
   });
 
-  const selectedBranches = watch("selectedBranch");
+  const selectedBranches = watch("branchId");
 
-  const submitHandler = (data: FloorData) => {
-    onSubmit(data.selectedBranch, data.floorName, data.count);
+  const submitHandler = (data: KitchenFormData) => {
+    onSubmit(data.branchId, data.kitchen);
   };
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (initialData) {
-      setValue("selectedBranch", initialData.branchId);
-      setValue("floorName", initialData.name);
-      setValue("count", initialData.count);
+      setValue("branchId", initialData.branchId);
+      setValue("kitchen", initialData.kitchen);
     }
   }, [initialData]);
   // const [selectedValue, setSelectedValue] = useState("");
@@ -63,24 +64,19 @@ const KitchenFloor = ({
           placeholder="Select Branch"
           options={branches}
           onChange={(val) => {
-            setValue("selectedBranch", val as string);
+            setValue("branchId", val as string);
           }}
           value={selectedBranches}
           isMulti={false}
           disabled={isEdit}
         />
 
+      
         <Input
           type="text"
-          label="Floor Name"
-          error={errors.floorName?.message}
-          register={register("floorName")}
-        />
-        <Input
-          type="text"
-          label="No. of Tables"
-          error={errors.count?.message}
-          register={register("count", { valueAsNumber: true })}
+          label="Kitchen Name"
+          error={errors.kitchen?.message}
+          register={register("kitchen")}
         />
       </div>
       <div className="w-1/2 flex justify-end">
@@ -90,4 +86,4 @@ const KitchenFloor = ({
   );
 };
 
-export default KitchenFloor;
+export default KitchenForm;
