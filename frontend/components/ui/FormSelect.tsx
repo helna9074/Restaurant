@@ -27,6 +27,7 @@ interface Props {
   setOpen?: (value: boolean) => void;
   open?: boolean;
   isMulti?: boolean;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const FormSelect = ({
@@ -40,7 +41,7 @@ const FormSelect = ({
   error,
   disabled,
   className,
-
+  onKeyDown,
   isMulti,
 }: Props) => {
   const [search, setSearch] = useState("");

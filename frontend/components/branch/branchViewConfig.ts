@@ -66,11 +66,11 @@ export const Branchsections = [
     ],
   },
 ];
-export const EmployeeSections= [
+export const EmployeeSections = [
   {
     title: "Personal Details",
     fields: [
-      {key:"branch.name",text:"Branch Name"},
+      { key: "branch.name", text: "Branch Name" },
       { key: "firstName", text: "First Name" },
       { key: "lastName", text: "Last Name" },
       { key: "email", text: "Email" },
@@ -84,10 +84,9 @@ export const EmployeeSections= [
     fields: [
       { key: "department.department", text: "Department" },
       { key: "position.position", text: "Position" },
-      
+
       { key: "salary", text: "Salary" },
       { key: "joiningDate", text: "Joining Date" },
     ],
   },
 ];
-

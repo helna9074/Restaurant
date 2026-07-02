@@ -1,120 +1,162 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import FormSelect from "@/components/ui/FormSelect";
-
 import Submitbtn from "@/components/ui/submitbtn";
 import { useFieldArray, useForm } from "react-hook-form";
-
-import { AddOnFormData, AddOnSchema, MenuFormData, MenuSchema } from "@/Schemas/menuSchemas";
+import { AddOnFormData, AddOnSchema } from "@/Schemas/menuSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { menuTableData } from "@/types/menu";
 import Input from "@/components/ui/Input";
 import { TiInputChecked } from "react-icons/ti";
 import { FaPlus, FaTrash } from "react-icons/fa";
-type branches = {
+import { addOnTableData } from "@/types/menu";
+
+type Branch = {
   value: string;
   label: string;
   subLabel: string;
-  
 };
+
 interface Props {
-  branches: branches[];
-  
-  isEdit:boolean
-  onSubmit: (branchId: string, addOn: string,portions?:{portion:string,price:number}[]) => void;
-  initialData?: menuTableData | null;
+  branches: Branch[];
+  isEdit: boolean;
+  onSubmit: (
+    branchId: string,
+    addOn: string,
+    portions: { portion: string; price: number }[]
+  ) => void;
+  initialData?: addOnTableData | null;
   isSubmitting?: boolean;
- 
 }
-const AddOneForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Props) => {
 
-  const {handleSubmit,setValue,watch,control,formState:{errors},register}=useForm<AddOnFormData>({
-     resolver:zodResolver(AddOnSchema),
-     defaultValues:{
-        portions:[],
-        addOn:"",
-        branchId:""
-     }
-   
-  })
-  const{fields,append,remove}=useFieldArray({
+const AddOneForm = ({
+  branches,
+  onSubmit,
+  initialData,
+  isSubmitting,
+  isEdit,
+}: Props) => {
+  const {
+    handleSubmit,
+    setValue,
+    watch,
     control,
-    name:"portions"
-  })
-  const selectedBranch=watch("branchId")
-  
- 
- const hasPortions=fields.length>0
+    register,
+    formState: { errors },
+  } = useForm<AddOnFormData>({
+    resolver: zodResolver(AddOnSchema),
+    defaultValues: {
+      branchId: "",
+      addOn: "",
+      portions: [],
+    },
+  });
 
-  const submitHandler=(data:AddOnFormData)=>{
-    console.log("reached")
-    console.log("this it he data hnow",data)
-    onSubmit(data.branchId,data.addOn,data.portions)
-  }
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "portions",
+  });
 
-    // const AddMenu=(value:string)=>{
-    //   if(!value) return 
-    //   if(isEdit){
-    //     setValue("menus",[value])
-    //     return 
-    //   }
-      
-    //   if(!fullmenus.includes(value)){
-    //     setValue("menus",[...fullmenus,value])
-    //   }
-    // }
-  const inputRef=useRef<HTMLInputElement|null>(null)
+  const selectedBranch = watch("branchId");
+
+  // checkbox state
+  const hasPortions = fields.length > 0;
+
+  const submitHandler = (data: AddOnFormData) => {
+   
+    console.log("submitting the data in the handler",data) 
+    onSubmit(data.branchId, data.addOn, data.portions??[]);
+  };
+
   useEffect(() => {
     if (initialData) {
-      setValue("branchId",initialData.branchId);
-      setValue("addOn",initialData.addOn);
-      setValue("portions",initialData.portions);
+      setValue("branchId", initialData.branchId);
+      setValue("addOn", initialData.addOnName);
 
+      if (initialData.portions) {
+        setValue("portions", initialData.portions);
+      }
     }
-  }, [initialData]);
+  }, [initialData, setValue]);
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)} className="flex flex-col gap-3 items-center w-full justify-center">
+    <form
+      onSubmit={handleSubmit(submitHandler)}
+        onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  }}
+      className="flex flex-col gap-4 items-center w-full"
+    >
+      {/* Branch */}
       <div className="w-1/2">
         <FormSelect
-         label="select branch"
+          label="Select Branch"
           placeholder="Select Branch"
           options={branches}
-          onChange={(val) => {setValue("branchId",val  as string);console.log(val,"val of branch")}}
           value={selectedBranch}
-           isMulti={false}
+          onChange={(val) => setValue("branchId", val as string)}
+          isMulti={false}
           disabled={isEdit}
         />
       </div>
-      
+
+      {/* Addon Name */}
+      <div className="w-1/2">
         <Input
           type="text"
-          label="Add ones Name"
-          error={errors.addOn?.message}
+          label="AddOn Name"
           register={register("addOn")}
+          error={errors.addOn?.message}
         />
-         <div
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => {if(hasPortions){
-                      remove();
-                    }else{
-                      append({portion:"",price:0})
-                    }}
-                  }
-                  >
-                    <div className="w-5 h-5 border border-gray-400 rounded-sm flex items-center justify-center">
-                      {hasPortions && <TiInputChecked className="text-lg text-green-500" />}
-                    </div>
-                    <span>Offer</span>
-        
-                  </div>
-                  {fields.map((f,i)=> (
-                    <div key={f.id} className="flex gap-2">
-                      <Input type='text' register={register(`portions.${i}.portion`)}/>
-                      <Input type="text" register={register(`portions.${i}.price`,{
-                        valueAsNumber:true
-                      })}/>
-                     <FaPlus
+      </div>
+
+      {/* Checkbox */}
+      <div
+        className="flex w-1/2 gap-2 cursor-pointer "
+        onClick={() => {
+          if (hasPortions) {
+            remove();
+          } else {
+            append({ portion: "", price: 0 });
+          }
+        }}
+      >
+        <div className="w-5 h-5 border rounded flex justify-center items-center">
+          {hasPortions && (
+            <TiInputChecked className="text-green-500 text-lg" />
+          )}
+        </div>
+
+        <span> Portions</span>
+      </div>
+
+      {/* Dynamic Portion Inputs */}
+      {fields.map((field, i) => (
+        <div
+          key={field.id}
+          className="w-1/2 flex gap-2 items-center justify-center"
+        >
+          <Input
+            type="text"
+            placeholder="Portion"
+            register={register(`portions.${i}.portion`)}
+            error={errors.portions?.[i]?.portion?.message}
+          />
+
+          <Input
+            type="number"
+            placeholder="Price"
+            register={register(`portions.${i}.price`, {
+              valueAsNumber: true,
+            })}
+            error={errors.portions?.[i]?.price?.message}
+          
+          />
+
+          {/* Add More */}
+          <FaPlus
             className="cursor-pointer text-green-500"
+            size={30}
             onClick={() =>
               append({
                 portion: "",
@@ -125,39 +167,16 @@ const AddOneForm = ({ branches, onSubmit, initialData ,isSubmitting,isEdit}: Pro
 
           {/* Remove */}
           <FaTrash
+          size={30}
             className="cursor-pointer text-red-500"
             onClick={() => remove(i)}
           />
-                    </div>
-                  ))}
-                 
-     {/* <div className="w-1/2">
-      <TagInput placeholder="Add menu" onAdd={AddMenu} label="" />
-     </div> */}
-      {/* <div className="w-1/2 flex flex-wrap gap-2">
-        {fullmenus.slice(0,isEdit?1:undefined).map((c) => (
-          <div
-            key={c}
-            className="bg-input-box relative text-secondary px-2 py-1 rounded-md "
-          >
-            <span className="text-sm ">{c}</span>
-            <div className="bg-input-box rounded-full p-1 absolute -right-2 -top-2 cursor-pointer flex mx-auto">
-              <FaXmark
-                className=" text-secondary hover:text-red-500 text-sm"
-                onClick={() =>
-                  setValue("menus",fullmenus.filter((v)=>v!==c))
-                }
-              />
-            </div>
-          </div>
-        ))}
-      </div> */}
+        </div>
+      ))}
+
+      {/* Submit */}
       <div className="w-1/2 flex justify-end">
-        <Submitbtn
-          label="Add"
-          loading={isSubmitting}
-         
-        />
+        <Submitbtn label="Add" loading={isSubmitting} />
       </div>
     </form>
   );

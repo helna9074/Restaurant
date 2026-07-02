@@ -1,3 +1,4 @@
+import AddOn from "./models/AddOn.js";
 import Category from "./models/Category.js";
 import Menu from "./models/Menu.js";
 import {
@@ -8,10 +9,17 @@ import {
   AddMenus,
   GetAllMenus,
   MenuUpdate,
-  MenuDelete
+  MenuDelete,
+  AddAddOn,
+  GetAllAddOns,
+  AddOnDelete,
+  AddOnUpdate,
+  AddFood,
+  UpdatingFood,
+  GetAllFoods,
+  ViewSingleFood,
+  DeleteFoodById,
 } from "./ServiceController.js";
-
-
 
 export const AddCategory = async (req, res) => {
   try {
@@ -49,7 +57,7 @@ export const GetCategories = async (req, res) => {
     const branchId = req.query.branchId || "";
     const startDate = req.query.startDate;
     const endDate = req.query.endDate;
-
+    console.log("this is the start and end date", startDate, endDate);
     if (req.user.role === "admin") {
       const data = await GetAllCategories(
         page,
@@ -129,25 +137,18 @@ export const AddMenu = async (req, res) => {
 export const GetMenus = async (req, res) => {
   try {
     console.log("api hitttt");
-   
 
     const search = req.query.search || "";
     const branchId = req.query.branchId || "";
-   
+
     if (req.user.role === "admin") {
-      const data = await GetAllMenus(
-       
-        search,
-        branchId,
-       
-      );
+      const data = await GetAllMenus(search, branchId);
       return res.status(200).json({ message: "fetched successfully", data });
     }
     const user = await User.findById(req.user.id);
     const data = await Menu.find({ branchId: { $in: user.branches } });
     return res.json({
       data,
-     
     });
   } catch (error) {
     return res
@@ -155,38 +156,200 @@ export const GetMenus = async (req, res) => {
       .json({ message: "internal server error", error: error.message });
   }
 };
-export const UpdateMenu=async(req,res)=>{
-  try{
-    const {id}=req.params
-    const {menus}=req.body
+export const UpdateMenu = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { menus } = req.body;
     // if(!menus.length===1) return res.status(400).json({message:"update one type at one time"})
-    if(!id) return res.status(400).json({message:"id is required"})
-      const data=await MenuUpdate(id,menus)
+    if (!id) return res.status(400).json({ message: "id is required" });
+    const data = await MenuUpdate(id, menus);
 
- return res.json({
+    return res.json({
       data,
-     
     });
-  }catch(err){
-    console.log(err)
-     return res
+  } catch (err) {
+    console.log(err);
+    return res
       .status(500)
       .json({ message: "internal server error", error: err.message });
   }
-}
-export const DeleteMenu=async(req,res)=>{
-  try{
-    const {id}=req.params
-    if(!id) return res.status(400).json({message:"id is required"})
-    const data=await MenuDelete(id)
-  return res.json({
+};
+export const DeleteMenu = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ message: "id is required" });
+    const data = await MenuDelete(id);
+    return res.json({
       data,
-     
     });
-  }catch(err){
-        console.log(err)
-     return res
+  } catch (err) {
+    console.log(err);
+    return res
       .status(500)
       .json({ message: "internal server error", error: err.message });
   }
-}
+};
+export const CreateAddOn = async (req, res) => {
+  try {
+    const { branchId, addOn, portions } = req.body;
+    if (!branchId.length || !addOn.length || !portions.length)
+      return res.status(400).json({ message: "all fields required" });
+    const data = await AddAddOn(branchId, addOn, portions);
+    return res.status(200).json({
+      message: "addon added successfully",
+      data,
+    });
+  } catch (err) {
+    if (err.code === 11000) {
+      console.log(`Duplicate addon skipped: ${addOn}`);
+    } else {
+      return res
+        .status(500)
+        .json({ message: "internal server error", error: err.message });
+    }
+  }
+};
+export const GetAddOns = async (req, res) => {
+  try {
+    console.log("api hitttt");
+
+    const search = req.query.search || "";
+    const branchId = req.query.branchId || "";
+
+    if (req.user.role === "admin") {
+      const data = await GetAllAddOns(search, branchId);
+      return res.status(200).json({ message: "fetched successfully", data });
+    }
+    const user = await User.findById(req.user.id);
+    const data = await AddOn.find({ branchId: { $in: user.branches } });
+    return res.json({
+      data,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: error.message });
+  }
+};
+export const UpdateAddOn = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { portions, addOn } = req.body;
+    // if(!menus.length===1) return res.status(400).json({message:"update one type at one time"})
+    if (!id) return res.status(400).json({ message: "id is required" });
+    console.log("got the portions", addOn);
+    const data = await AddOnUpdate(id, addOn, portions);
+
+    return res.json({
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: err.message });
+  }
+};
+export const DeleteAddOn = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ message: "id is required" });
+    const data = await AddOnDelete(id);
+    return res.json({
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: err.message });
+  }
+};
+export const CreateFood = async (req, res) => {
+  try {
+    const file = req.file;
+    console.log("this is the food img", file);
+    const data = req.body;
+    const food = await AddFood(data, file);
+    return res.status(201).json({
+      message: "Food is added successfully",
+      food,
+    });
+  } catch (error) {
+    console.log("this is the food error", error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "Category already exists for this branch",
+      });
+    }
+
+    return res.status(500).json({
+      message: error.message || "Internal server error",
+    });
+  }
+};
+export const UpdateFood = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = req.file;
+    const data = req.body;
+    console.log("this is the data and file of food", data, file);
+    if (!id) return res.status(400).json({ message: "id is required" });
+    const updatedFood = await UpdatingFood(id, data, file);
+    return res.status(200).json({ message: "Updated successfully" });
+  } catch (error) {
+    console.log("this is the food error", error);
+    return res.status(500).json({ message: "internal server error", error });
+  }
+};
+export const GetFoods = async (req, res) => {
+  try {
+    console.log("call reached for food");
+
+    const limit = Number(req.query.limit) || 10;
+    const page = Number(req.query.page) || 1;
+    const search = req.query.search || "";
+
+    const category = req.query.category || "";
+    const kitchen = req.query.kitchen || "";
+    const branchId = req.query.branchId || "";
+    const { allFoods, totalPages } = await GetAllFoods({
+      page,
+      limit,
+      search,
+      branchId,
+      category,
+      kitchen,
+    });
+    return res
+      .status(200)
+      .json({ message: "fetched successfully", data: allFoods, totalPages });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: error.message });
+  }
+};
+export const ViewFood = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ message: "id is required" });
+    const data = await ViewSingleFood(id);
+    return res.json({
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(500)
+      .json({ message: "internal server error", error: err.message });
+  }
+};
+export const DeleteFood = (req, res) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ message: "id is required" });
+  const data = DeleteFoodById(id);
+  return res.status(200).json({
+    message: "Food deleted successfully",
+  });
+};

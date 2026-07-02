@@ -130,7 +130,11 @@ const BranchSection = () => {
           {viewLoading ? (
             <p>Loading.....</p>
           ) : (
-            <BranchInfo data={viewData?.branch} sections={Branchsections} imageKey="logo" />
+            <BranchInfo
+              data={viewData?.branch}
+              sections={Branchsections}
+              imageKey="logo"
+            />
           )}
         </Modal>
       )}

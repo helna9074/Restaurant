@@ -21,6 +21,7 @@ import Input from '@/components/ui/Input'
 import Pagination from "../TableComponents/Pagination";
 import { PaginationSkeleton } from "../wrapper/PaginationSkelton";
 import { FormatDate } from "@/helper/date";
+import { useCategory } from "@/hooks/useCategory";
 
 
 const Category = () => {
@@ -47,24 +48,24 @@ const [endDate, setEndDate] = useState<string | null>(null);
     label: b.name,
     subLabel: `${b.city}, ${b.state}, ${b.email}`,
   }));
-  const { data, isLoading } = useQuery({
-    queryKey: ["categories", selectedBranch,startDate,endDate, debouncedValue],
-    queryFn: () => GetCategories(selectedBranch, debouncedValue,startDate,endDate,page),
-    enabled: !!selectedBranch,
-    staleTime: 2 * 60 * 1000,
-  });
-
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ["categories", selectedBranch,startDate,endDate, debouncedValue],
+  //   queryFn: () => GetCategories(selectedBranch, debouncedValue,startDate,endDate,page),
+  //   enabled: !!selectedBranch,
+  //   staleTime: 2 * 60 * 1000,
+  // });
+ const {categories:data,isLoading}=useCategory(selectedBranch,startDate,endDate,debouncedValue,page)
   useEffect(() => {
     if (branches.length && !selectedBranch) {
       setBranch(branches[0]._id);
     }
     console.log("this is the selected branch", selectedBranch);
   }, [branches]);
-  useEffect(() => {
-  if (data) {
-    setTotalPage(data.totalPages);
-  }
-}, [data]);
+//   useEffect(() => {
+//   if (data) {
+//     setTotalPage(data.totalPages);
+//   }
+// }, [data]);
   const handleSearchChange = (value: string) => {
     setSearch(value);
     // setPage(1)

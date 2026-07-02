@@ -1,7 +1,9 @@
 "use client";
 
 import BranchTabs from "@/components/branch/BranchTabs";
+import AddOnes from "@/components/Menu/AddOnes";
 import Category from "@/components/Menu/Category";
+import Food from "@/components/Menu/Food";
 import Menu from "@/components/Menu/menu";
 
 
@@ -26,7 +28,8 @@ const MenuPage = () => {
       />
       {activeTab === "category" && <Category />}
       {activeTab === "menutype" && <Menu />}
-      {activeTab === "addons" && <div>Add Ons Content</div>}
+      {activeTab === "addons" && <AddOnes/>}
+      {activeTab==="food" && <Food/>}
     </div>
   );
 };

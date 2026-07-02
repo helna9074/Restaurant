@@ -4,6 +4,7 @@ import Detail from "./Detail";
 type Field = {
   key: string;
   text: string;
+  type?: "text" | "date" | "array" | "boolean" | undefined; // optional, default is text
 };
 
 type Section = {
@@ -20,7 +21,6 @@ interface Props {
 const InfoRenderer = ({ data, sections, imageKey }: Props) => {
   return (
     <div className="space-y-6 flex lg:flex-row flex-col gap-2">
-      
       {imageKey && data[imageKey] && (
         <div className="w-40">
           <img
@@ -40,7 +40,8 @@ const InfoRenderer = ({ data, sections, imageKey }: Props) => {
                 <Detail
                   key={field.key}
                   text={field.text}
-                  value={getValue(data,field.key)}
+                  value={getValue(data, field.key)}
+                  type={field.type}
                 />
               ))}
             </div>
